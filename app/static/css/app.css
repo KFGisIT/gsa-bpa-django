@@ -1,0 +1,94 @@
+html,body {height:100%;}
+body {
+    font-family: 'Merriweather Sans';
+    padding-top: 50px;
+}
+
+th {
+    background-color: #191C18;
+    color: #9d9d9d;
+    font-weight: lighter;
+    border: 1px solid #191C18;
+}
+
+.jumbotron {
+    color: #fff;
+    background-color: #2C3827;
+    background-image: url('../img/city_blur.jpg');
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+.flash {
+    margin-top: 30px;
+    display: none;
+}
+
+.navbar-inverse {
+    background-color: #000;
+}
+
+.btn.btn-primary.btn-food {
+    background-color: #7B61DE;
+}
+
+.btn.btn-primary.btn-food.active {
+    color: #ffffff;
+    background-color: #4a3A85;
+
+}
+
+.btn.btn-primary.btn-drug {
+
+    background-color: #A0BF35;
+    border-color: #A0BF35;
+}
+
+.btn.btn-primary.btn-drug.active {
+    color: #ffffff;
+    background-color: #778E25;
+    border-color: #778E25;
+}
+
+.brand {
+    color: #A0BF35;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 34px;
+}
+
+.footer {
+    bottom: 0;
+    padding: 30px;
+    width: 100%;
+    height: 120px;
+    color: #7B61DE;
+    background: rgb(24, 24, 39);
+}
+
+
+.table-bordered>thead>tr>th {
+  border: 1px solid #191C18;
+}
+.pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #B661E0;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    z-index: 2;
+    color: #B661E0;
+    cursor: default;
+    background: rgb(239, 237, 239);
+    border: 1px solid #ddd;
+}
