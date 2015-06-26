@@ -1,4 +1,4 @@
-# gsa-bpa-drupal
+# gsa-bpa-django
 GSA Agile BPA Repository for Drupal Full Stack Component
 
 
