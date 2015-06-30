@@ -11,6 +11,10 @@ th {
     border: 1px solid #191C18;
 }
 
+table {
+    font-size: 12px;
+}
+
 .jumbotron {
     color: #fff;
     background-color: #2C3827;
@@ -91,4 +95,33 @@ th {
     cursor: default;
     background: rgb(239, 237, 239);
     border: 1px solid #ddd;
+}
+
+.pr-message {
+    background: rgba(15, 15, 15, .55);
+    color: #fff;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    font-size: 18px;
+    left: 0;
+    text-align: center;
+    padding: 55px 10px;
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one       */
+  display: flex;
+  align-items: center;
+}
+
+ .banner {
+  padding: 15% 0px 15% 0px;
+  text-align: center;
+}
+.banner:after {
+  content: "";
+  display: block;
+
 }

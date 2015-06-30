@@ -8,7 +8,7 @@ SECRET_KEY = '_*zjhswt9umayc3hl4(a3trs3fz+zgh9l@o^1(bo#%jl@t4jqu'
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 TEST_PROJECT_APPS = (
     'app',

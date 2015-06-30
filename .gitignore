@@ -29,6 +29,9 @@ Thumbs.db
 # Ignore bower components
 /app/static/bower_components/
 
+# Ignore database
+db.sqlite3
+
 # Folders
 /reports/
 /doc/build/

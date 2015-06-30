@@ -53,10 +53,18 @@
 
     $.subscribe('error.returned', this, function (event, data) {
         data = $.parseJSON(data);
+        //Display Flash Message w/ Error to User
         $('.flash').removeClass("alert-success").addClass("alert-danger");
         $(".flash #message").empty().html(data.error.message);
         $('.flash').fadeIn(500).delay(2000).fadeOut(500);
 
+        //clear out the data table and pagination component
+        $('#data_table tbody').empty();
+        $('#page-selection_top').bootpag().empty();
+
+        //Additional notices to user regarding error...
+        $('#no_results_text').html(data.error.message).show();
+        $("#content").html(data.error.message);
     });
 
     /**
@@ -65,9 +73,8 @@
      */
     $.subscribe('api.returned', this, function (event, data) {
 
-        console.log('total: ' + data.meta.results.total);
-        //TODO: Replace hardcode logic w/ currentPage, skip, and total forumula
-        $("#content").html("Showing results 1 thru 5 of " + data.meta.results.total);
+        //console.log('total: ' + data.meta.results.total);
+
         // init pagination component
         $('#page-selection_top').bootpag({
             total: __total = Math.ceil(data.meta.results.total / 5),
@@ -94,7 +101,7 @@
             $('#no_results_text').html("You haven't fetched any data yet...");
         }
 
-        var dataTable = $('#data_table > tbody');
+        var dataTable = $('#data_table tbody');
         dataTable.empty(); // delete the table before we rewrite
 
         $.each(data.results, function (i, item) {
@@ -107,6 +114,21 @@
             $(tableRow).appendTo(dataTable);
         });
 
+        var skip =  (__currentPage * __limit) - __limit;
+        var nextFive = skip + 5;
+        var totalResults = data.meta.results.total;
+        if(nextFive > totalResults) {
+            nextFive = totalResults;
+        }
+
+        $("#content").html("Showing results "+ (skip + 1) + " - " + nextFive + " of " + totalResults);
+
+        //$('.bottom').empty();
+        //$('.pr-message .container').clone(true,true).prependTo('.bottom');
+
+        $('html, body').animate({
+            scrollTop: $("#data_table").offset().top
+        }, 1000);
 
     });
 
