@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ![](https://raw.githubusercontent.com/PabloVallejo/django-bower/master/screenshot.png)
 
 ## Original Article
@@ -68,4 +67,3 @@ At first he called me paranoid for always checking the site, but lately he's eve
 
 Since the other local moms and I stay in touch on facebook and I've been getting more twitter followers from the school, 
 I really like the simple way to post a yuck from the yuck-list to my wall or tweet a yuck to get the word out.
->>>>>>> f24089e606a8a1f4821cc1807d96ea2ca4faf3b9
