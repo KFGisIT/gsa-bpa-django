@@ -86,3 +86,17 @@ Require all granted
 </Files>
 </Directory>
 ```
+###Architecture##
+*	Linux-Apache-Python Server Stack
+*	Docker
+*	HTML5
+* 	CSS3
+*	Python 3.3.*
+*	Django 1.7.*
+*	Selenium 2.46.*
+*	JavaScript 
+*	jQuery 2.1.4
+* 	Bootstrap 3.3.*
+* 	Bower 0.1.0
+*	Npm 2.10.1
+*	Pip 7.0.3
