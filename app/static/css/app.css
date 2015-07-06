@@ -121,6 +121,17 @@ table {
     padding: 55px 10px;
 }
 
+.rr-message {
+    background: rgba(15, 15, 15, .55);
+    color: #fff;
+    width: 100%;
+    bottom: 0;
+    font-size: 18px;
+    left: 0;
+    text-align: center;
+    padding: 25px 10px;
+}
+
 .vertical-center {
     min-height: 100%; /* Fallback for browsers do NOT support vh unit */
     min-height: 100vh; /* These two lines are counted as one       */

@@ -17,6 +17,11 @@
         __site = "drug";
     });
 
+    $("#backTop").on("click", function() {
+       $("html, body").animate({
+            scrollTop:0
+         },"fast");
+    });
     $(".js-example-basic-single").prepend('<option/>').val(function () {
         return $('[selected]', this).val();
     }).select2({
