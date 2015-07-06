@@ -1,4 +1,4 @@
-![alt tag](screenshot.png)
+![Yuck.io Screenshot](screenshot.png)
 
 #User Story#
 ##Melanie - The Soccer Mom Down the Street##
@@ -33,3 +33,56 @@ At first he called me paranoid for always checking the site, but lately he's eve
 
 Since the other local moms and I stay in touch on facebook and I've been getting more twitter followers from the school, 
 I really like the simple way to post a yuck from the yuck-list to my wall or tweet a yuck to get the word out.
+
+##System Engineering##
+
+###Configuration Management###
+
+**Installation**
+
+Based in Python3 & Django's web framework, getting Yuck.io up and running couldn't be easier.
+
+*Install Prerequisites*
+
+**Python Requirements**
+
+```bash
+$ pip install -r requirements.txt
+```
+
+**Node Requirements**
+
+```bash
+$ npm install -g bower
+```
+
+*Clone the Yuck.io Repository*
+
+```bash
+$ git clone git@github.com:KFGisIT/gsa-bpa-django.git
+```
+
+*Pull Dependencies*
+
+```bash
+$ cd gsa-bpa-django
+$ bower install
+```
+
+*Setup Apache to Serve Django*
+
+Edit the apache configuraiton file, commonly located at:
+
+*	/etc/apache2/httpd.conf or 
+* 	/etc/apache2/sites-available/default.conf
+
+```apacheconf
+WSGIScriptAlias / /path/to/gsa-bpa-django/app/wsgi.py
+WSGIPythonPath /path/to/gsa-bpa-django
+
+<Directory /path/to/gsa-bpa-django/app> 
+<Files wsgi.py>
+Require all granted
+</Files>
+</Directory>
+```
