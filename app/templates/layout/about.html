@@ -1,0 +1,55 @@
+{% extends 'layout/base.html' %}
+{% load staticfiles compressed %}
+{% compressed_css 'libs' %}
+
+{% block title %}About Yuck.IO{% endblock %}
+
+<!-- Styles -->
+{% block css %}
+
+	<!-- Dependencies -->
+    <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans' rel='stylesheet' type='text/css'>
+	{% compressed_css 'libraries' %}
+
+	<!-- Styles -->
+	{% compressed_css 'base' %}
+
+{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="jumbotron banner">
+        <div class="container">
+            <p class="text-center" style="font-weight:lighter; font-size:12px;">WELCOME TO</p>
+
+            <p class="text-center" style="font-weight: 900; font-size:70px;">
+                <span style="color:#7B61DE">YUCK</span><span style="color:#fff">.</span><span class="brand">IO</span>
+            </p>
+
+            <p class="text-center" style="letter-spacing: 2px; color:#B661E0; font-weight:lighter; font-style: italic;">
+                See the food and drug recalls in your area.</p>
+        </div>
+    </div>
+    <div class="pr-message">
+       <div class="container">
+       </div>
+    </div>
+    <div  class="container">
+        <!-- Flash Message -->
+        <div class="flash alert{% if message.tags %} alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% endif %} alert-dismissable">
+            <button type="button" class="close btn-block" data-dismiss="alert" aria-hidden="true">&#215;</button>
+            <div id="message"> {{ message|safe }} </div>
+        </div>
+
+        <div id="content" class="table-responsive"></div>
+        <hr/>
+
+    </div>
+{% endblock %}
+<!-- Scripts -->
+{% block js %}
+
+	<!-- Scripts -->
+	{% compressed_js 'libraries' %}
+
+{% endblock %}

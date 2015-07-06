@@ -4,7 +4,7 @@
 (function () {
 
     var __site = "food";
-    var __limit = 5;
+    var __limit = 100;
     var __total = 0;
     var __currentPage = 1;
 
@@ -20,12 +20,13 @@
     $(".js-example-basic-single").prepend('<option/>').val(function () {
         return $('[selected]', this).val();
     }).select2({
-        width: '35%',
+        width: '100%',
         placeholder: "Select a state"
     });
 
     $("#go_btn").on("click", function () {
-        fetchAPIData(1, __limit);
+        __currentPage = 1;
+        fetchAPIData(__currentPage, __limit);
     });
 
 
@@ -76,8 +77,8 @@
         //console.log('total: ' + data.meta.results.total);
 
         // init pagination component
-        $('#page-selection_top').bootpag({
-            total: __total = Math.ceil(data.meta.results.total / 5),
+        $('#page-selection_top, #page-selection_bottom').bootpag({
+            total: __total = Math.ceil(data.meta.results.total / __limit),
             maxVisible: 5,
             leaps: true,
             firstLastUse: false,
@@ -104,30 +105,33 @@
         var dataTable = $('#data_table tbody');
         dataTable.empty(); // delete the table before we rewrite
 
+        var dataList = $('#data_list');
+        dataList.empty();
         $.each(data.results, function (i, item) {
-            var tableRow = '<tr>';
-            tableRow += '<td>' + data.results[i].status + '</td>';
-            tableRow += '<td>' + data.results[i].reason_for_recall + '</td>';
-            tableRow += '<td>' + data.results[i].product_description + '</td>';
-            tableRow += '<td>' + data.results[i].city + '</td>';
-            tableRow += '</tr>';
-            $(tableRow).appendTo(dataTable);
+
+            var dataRow = '<div class="list-group-item">';
+            dataRow += '<div class="header"><div><div class="heading list-group-item-heading">' + data.results[i].city + '<div class="pull-right"><span id="dupe"><i class="fa fa-sort-down"></i></span></div></div>';
+            dataRow += '<p class="list-group-item-text truncate">' + data.results[i].reason_for_recall + '</p></div></div>';
+            dataRow += '<div class="news" style="display:none"><p class="list-group-item-text" ><span class="label label-default">Status</span> - ' + data.results[i].status + '</p>';
+            dataRow += '<p class="list-group-item-text" ><span class="label label-primary">Product Description</span> - ' + data.results[i].product_description + '</p></div>';
+            dataRow += '</div>';
+            $(dataRow).appendTo(dataList);
+
         });
 
-        var skip =  (__currentPage * __limit) - __limit;
-        var nextFive = skip + 5;
+        var skip = (__currentPage * __limit) - __limit;
+        var nextFive = skip + __limit;
         var totalResults = data.meta.results.total;
-        if(nextFive > totalResults) {
+
+        if (nextFive > totalResults) {
             nextFive = totalResults;
         }
 
-        $("#content").html("Showing results "+ (skip + 1) + " - " + nextFive + " of " + totalResults);
-
-        //$('.bottom').empty();
-        //$('.pr-message .container').clone(true,true).prependTo('.bottom');
+        initializeListEvents();
+        $("#content").html("Showing " + __site + " results " + (skip + 1) + " - " + nextFive + " of " + totalResults);
 
         $('html, body').animate({
-            scrollTop: $("#data_table").offset().top
+            scrollTop: $("#content").offset().top
         }, 1000);
 
     });
@@ -135,6 +139,31 @@
     $.subscribe('paginator.changed', this, function (event, data) {
         fetchAPIData(data, __limit);
     });
+
+
+    function initializeListEvents() {
+
+        $(".header").on('click', function () {
+            $header = $(this);
+            //getting the next element
+            $content = $header.next();
+            //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+            $content.slideToggle(200, function () {
+                //change text of header based on visibility of content div
+                $header.find('p').toggleClass('truncate');
+                $icon = $header.find('#dupe > i');
+                if ($content.is(":visible")) {
+                    $icon.removeClass('fa-sort-down');
+                    $icon.addClass('fa-sort-up');
+                }
+                else {
+                    $icon.removeClass('fa-sort-up');
+                    $icon.addClass('fa-sort-down');
+                }
+            });
+
+        });
+    }
 
 })();
 

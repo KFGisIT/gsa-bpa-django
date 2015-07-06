@@ -1,4 +1,7 @@
-html,body {height:100%;}
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Merriweather Sans';
     padding-top: 50px;
@@ -23,6 +26,15 @@ table {
     background-repeat: no-repeat;
     background-size: cover;
 
+}
+
+.heading {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.news p {
+    padding-top: 20px;
 }
 
 .flash {
@@ -73,10 +85,10 @@ table {
     background: rgb(24, 24, 39);
 }
 
-
-.table-bordered>thead>tr>th {
-  border: 1px solid #191C18;
+.table-bordered > thead > tr > th {
+    border: 1px solid #191C18;
 }
+
 .pagination > li > a, .pagination > li > span {
     position: relative;
     float: left;
@@ -110,18 +122,57 @@ table {
 }
 
 .vertical-center {
-  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-  min-height: 100vh; /* These two lines are counted as one       */
-  display: flex;
-  align-items: center;
+    min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one       */
+    display: flex;
+    align-items: center;
 }
 
- .banner {
-  padding: 15% 0px 15% 0px;
-  text-align: center;
+.banner {
+    padding: 15% 0px 15% 0px;
+    text-align: center;
 }
+
 .banner:after {
-  content: "";
-  display: block;
+    content: "";
+    display: block;
 
+}
+
+.btn-mobile {
+    width: 100%;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 6px;
+    padding: 10px 16px;
+}
+
+@media (min-width: 768px) {
+    .btn-mobile {
+        width: auto;
+        font-size: 14px;
+        line-height: 1.428571429;
+        padding: 6px 12px;
+    }
+
+    .btn-group-justified {
+        width: 35%;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-sm-4 {
+        margin-bottom: 20px;
+    }
+
+    .btn-group-justified {
+        margin-bottom: 20px;
+    }
+}
+
+.truncate {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

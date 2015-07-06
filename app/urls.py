@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     
     # Home 
     url(r'^$', Home.as_view()),
+
 )
