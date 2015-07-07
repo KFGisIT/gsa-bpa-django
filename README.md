@@ -38,54 +38,186 @@ I really like the simple way to post a yuck from the yuck-list to my wall or twe
 
 ###Configuration Management###
 
-**Installation**
+The following configuration steps assume a fresh installation of [Debian Jessie (8.1)](https://www.debian.org/releases/stable/)
 
-Based in Python3 & Django's web framework, getting Yuck.io up and running couldn't be easier.
+It is also important to clone the [installation repository](https://github.com/KFGisIT/gsa-bpa-docker-ci-demo) for access to the necessary configuration and scripts. For purposes of this installation, we'll assume that it's been cloned to the home directory.
 
-*Install Prerequisites*
-
-**Python Requirements**
+**Install Pre-requisites**
 
 ```bash
-$ pip install -r requirements.txt
+# Install packages.
+$ apt-get update
+$ apt-get install -y \
+# for dev
+        build-essential \
+        git \
+        openssh-server \
+        aptitude \
+# required
+        python3-dev \
+	python3 \
+	python3-pip \
+        python3-setuptools \
+        nginx \
+        sqlite3 \
+        supervisor \
+        vim \
+        nodejs \
+        npm \
+        curl \
+# for automatic security updates
+        unattended-upgrades \
+	apt-listchanges \
+	mailutils 
 ```
 
-**Node Requirements**
+**Path fix for Node.js**
 
 ```bash
-$ npm install -g bower
+$ ln -s /usr/bin/nodejs /usr/bin/node 
 ```
-
-*Clone the Yuck.io Repository*
+**Setup Pip, Dependencies & Configure WSGI**
 
 ```bash
-$ git clone git@github.com:KFGisIT/gsa-bpa-django.git
+$ easy_install3 pip
+
+$ pip3 install -U pip
+$ pip3 install virtualenv
+$ virtualenv /env
+$ DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -y uwsgi uwsgi-plugin-python && \
+    rm /etc/uwsgi/ -rf
+
+$ ./config/uwsgi.conf /etc/uwsgi.conf
+
+$ apt-get clean
 ```
 
-*Pull Dependencies*
+**Setup SSH**
+NOTE: SSH is usually NOT needed in PRODUCTION environments!
+
 
 ```bash
-$ cd gsa-bpa-django
-$ bower install
+# Use these two commands to manually specify a password
+$ echo 'root:PleaseDontDoThis' | chpasswd
+$ sed -i 's/PermitRootLogin without-password PermitRootLogin yes/' /etc/ssh/sshd_config
+$ mkdir -p /root/.ssh/ && touch /root/.ssh/authorized_keys
+$ mkdir /var/run/sshd && chmod 0755 /var/run/sshd
+$ sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+# This file missing for you? It's different on every system. 
+# It's part of passwordless SSH authentication; it's meant to contain YOUR public SSH key.  
+# If this is not a familiar concept, please use the helper docker_ssh_auth script to help you generate the authorized_keys 
+```
+**Key Configuration Using a Text Editor**
+
+```bash 
+# Append the appropriate  
+# authorized_keys to /root/.ssh/authorized_keys
+```
+**Fix SSH Permissions**
+
+```bash
+$ chmod 0700 /root/.ssh
+$ chmod 0600 /root/.ssh/authorized_keys
 ```
 
-*Setup Apache to Serve Django*
+**Setup Unattended Upgrades/Updates (security only)**
 
-Edit the apache configuraiton file, commonly located at:
-
-*	/etc/apache2/httpd.conf or 
-* 	/etc/apache2/sites-available/default.conf
-
-```apacheconf
-WSGIScriptAlias / /path/to/gsa-bpa-django/app/wsgi.py
-WSGIPythonPath /path/to/gsa-bpa-django
-
-<Directory /path/to/gsa-bpa-django/app> 
-<Files wsgi.py>
-Require all granted
-</Files>
-</Directory>
+```bash
+$ config/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades
+$ echo "Unattended-Upgrade::Mail \"$YOUR_EMAIL\";" >> /etc/apt/apt.conf.d/50unattended-upgrades
 ```
+
+**Setup nginx as the supervised container process**
+
+```bash
+$ echo "daemon off;" >> /etc/nginx/nginx.conf &&\
+  rm /etc/nginx/sites-enabled/default &&\
+  ln -s /opt/django/django.conf /etc/nginx/sites-enabled/ &&\
+  ln -s /opt/django/supervisord.conf /etc/supervisor/conf.d/
+
+$ echo -e '[program:apache2]\ncommand=/bin/bash -c "source /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND"\nautorestart=true\n\n' >> /etc/supervisor/supervisord.conf
+
+$ echo -e '[program:mysql]\ncommand=/usr/bin/pidproxy /var/run/mysqld/mysqld.pid /usr/sbin/mysqld\nautorestart=true\n\n' >> /etc/supervisor/supervisord.conf
+
+$ echo -e '[program:sshd]\ncommand=/usr/sbin/sshd -D\n\n' >> /etc/supervisor/supervisord.conf
+
+$ echo -e '[program:blackfire]\ncommand=/usr/local/bin/launch-blackfire\n\n' >> /etc/supervisor/supervisord.conf
+```
+
+**Setup Django & Checkout the Project from GitHub**
+
+```bash
+$ cp ~/config/django-requirements.txt /tmp/requirements.txt
+
+$ pip install -r /tmp/requirements.txt
+
+$ /env/bin/pip3 install --upgrade setuptools
+
+$ update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+
+$ update-alternatives --install /usr/bin/python python /usr/bin/python3.4 2
+
+$ apt-get install --reinstall python-pkg-resources
+
+$ cp ~/shared/yuck.io/ /opt/django/
+
+$ cd /opt/django
+
+#Switch over virutal enviornments
+$ source /env/bin/activate
+$ source /opt/python/current/env
+
+#Clone the full project repository
+$ git clone https://github.com/KFGisIT/gsa-bpa-django.git .
+
+#Install dependencies
+$ npm install -g bower grunt-cli yuglify uglifyjs && cat bower.json 
+
+$ bower install --allow-root --config.interactive=false
+# misc tweaks
+
+$cd /var/www/html
+$ mkdir -p /var/www/htmlsites/default/files && \
+$ chmod a+w /var/www/html/sites/default -R && \
+$ mkdir /var/www/html/sites/all/modules/contrib -p && \
+$	mkdir /var/www/html/sites/all/modules/custom && \
+$	mkdir /var/www/html/sites/all/themes/contrib -p && \
+$	mkdir /var/www/html/sites/all/themes/custom && \
+$	chown -R www-data:www-data /var/www/html/
+	
+$ drush dl admin_menu devel && \
+ drush en -y admin_menu simpletest && \
+ drush vset "admin_menu_tweak_modules" 1
+```
+**Server Deployment**
+Several decisions can be made with respect to deployment. 
+
+```bash
+# Build for uwsgi
+$ ["/usr/bin/uwsgi", "--ini", "/etc/uwsgi.conf"]
+
+# Patch for a bug with bower, collectstatic, and fonts
+# workaround:
+# https://github.com/brunch/brunch/issues/633 
+$ cp app/static/bower_components/bootstrap/fonts/* app/static/bower_components/select2/docs/vendor/fonts
+
+#run directly, for development/debugging
+$ mkdir /opt/django/app/static/components && \ 
+    python3 ./manage.py collectstatic --noinput 
+
+#for debugging only
+$ python3 ./manage.py runserver 0.0.0.0:5000
+
+
+# Build for uwsgi+lightweight http, if you want 
+$ ["/usr/bin/uwsgi", "--ini", "/etc/uwsgi.conf"]
+
+
+# The files could also be served via nginx, which is outside the scope of this documentation
+```
+
 ###Architecture##
 *	Linux-Apache-Python Server Stack
 *	Docker
